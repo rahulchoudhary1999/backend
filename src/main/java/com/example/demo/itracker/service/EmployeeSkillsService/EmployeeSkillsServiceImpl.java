@@ -88,13 +88,50 @@ public class EmployeeSkillsServiceImpl implements EmployeeSkillsService{
 	@Override
 	public Response updateSkill(int id, RequestBodyEmployeeSkills rq) {
 		// TODO Auto-generated method stub
-		return null;
+		Response res = new Response();
+		try {
+			Optional<EmployeeSkill> es = esrepo.findById(id);
+			if (!es.isPresent()) throw new Exception("Invalid Id");
+
+			Optional<Employee> ee = erepo.findById(rq.getEmployeeId());
+			if (!ee.isPresent()) throw new Exception("Employee Not Registered");
+
+
+			EmployeeSkill ek = new EmployeeSkill();
+			ek.setId(id);
+			ek.setEmployeeId(rq.getEmployeeId());
+			ek.setSkillId(rq.getSkillId());
+
+			esrepo.save(ek);
+			res.setSuccess(true);
+			res.setMessage("Update Successful.");
+		}
+		catch(Exception ex){
+			res.setSuccess(false);
+			res.setMessage(ex.getMessage());
+
+		}
+		return res;
 	}
 
 	@Override
 	public Response deleteSkill(int id) {
 		// TODO Auto-generated method stub
-		return null;
+		Response res = new Response();
+		try {
+			Optional<EmployeeSkill> es = esrepo.findById(id);
+			if (!es.isPresent()) throw new Exception("Invalid Id");
+
+			esrepo.deleteById(id);
+			res.setMessage("Delete Successful.");
+			res.setSuccess(true);
+		}
+		catch(Exception ex){
+			res.setSuccess(false);
+			res.setMessage(ex.getMessage());
+		}
+
+		return res;
 	}
 
 	@Override
